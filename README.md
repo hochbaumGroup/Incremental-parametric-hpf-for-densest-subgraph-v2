@@ -1,4 +1,4 @@
-# Incremental Parametric Cut (IPC) procedure for Densest Subgraph Problem
+# Incremental Parametric Cut (IPC) procedure for Densest Subgraph Problem (Version 2)
 
 This repository provides an exact densest subgraph solver, using the Incremental Parametric Cut (IPC) implementation of the HPF (Pseudoflow) algorithm for minimum cut (and maximum flow). In the proxy parametric minimum cut problem, the capacity of source-adjacent arcs is monotone non-increasing in the parameter lambda whereas the capacity of sink-adjacent arcs is monotone non-decreasing in lambda. This solver requires that the weights of the arcs and the nodes be positive; node values (see `--valuedNodes`) may be positive, zero or negative.
 
@@ -11,6 +11,8 @@ An experimental study of this implementation is presented in:
     D. S. Hochbaum, A. Irribarra-Cortés, O. Goldschmidt, R. Asín-Achá, “Fast and Optimal Incremental Parametric Procedure for the Densest Subgraph Problem: An Experimental Study,” arXiv:2509.14993 [cs.DS], 2025. https://arxiv.org/abs/2509.14993
 
 This implementation is based on the original implementation of the [Simple Parametric HPF](https://riot.ieor.berkeley.edu/Applications/Pseudoflow/parametric.html).
+
+Version 2 supersedes Version 1.0. It reads the same input, takes the same options and delivers the same solutions as Version 1.0, with less memory and a faster update of the capacities between iterations. The source code of Version 1.0 remains available in directory `src/1.0`.
 
 # Compiling
 
@@ -79,6 +81,29 @@ TAIL_EDGE_m HEAD_EDGE_m [WEIGHT_EDGE_m]
 ```
 
 See directory [examples](examples) for sample input files; each file name indicates which options to use (e.g., `example_weighted_valued_nodes_edges.txt` requires `--weightedNodes --valuedNodes --weightedEdges`).
+
+# Python interface
+
+File `python/ipc_dsp.py` provides a Python interface for [networkx](https://networkx.org) graphs. It writes the graph in the input format above, runs the `IPC-DSP` executable, which must be compiled first, and reads the solution.
+
+```python
+import networkx as nx
+from ipc_dsp import densest_subgraph  # add directory python to the Python path
+
+G = nx.Graph()
+G.add_edges_from([(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4), (4, 5)])
+
+density, nodes = densest_subgraph(G)
+print(density)  # Output: 1.5
+print(nodes)  # Output: [1, 2, 3, 4]
+```
+
+The optional arguments `edge_weight`, `node_weight` and `node_value` give the names of the attributes that hold the edge weights, the node weights and the node values, and `accuracy` sets the number of decimal places.
+
+# Latest Updates
+
+- November, 2026: Python interface added.
+- November, 2026: Version 2. The graph is stored in a compact form, and the capacities are updated between iterations in two passes over the nodes of the current solution.
 
 # License
 

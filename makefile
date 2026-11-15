@@ -1,6 +1,6 @@
-CFLAGS=-O4 -g  -DFAST_IO 
+CFLAGS=-O4 -g -Wall
 BINDIR=bin
-SOURCES = src/1.0/IPC-DSP.c
+SOURCES = src/2.0/IPC-DSP.c
 OBJECTS = $(SOURCES:.c=.o)
 TARGET = IPC-DSP
 CC=gcc
@@ -12,7 +12,3 @@ clean:
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o bin/$(TARGET) $(OBJECTS)
-
-
-$(TARGET)_anytime: $(OBJECTS)
-	$(CC) $(CFLAGS) -DANYTIME -o bin/$(TARGET)_anytime $(SOURCES)
